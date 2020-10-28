@@ -3,3 +3,14 @@ services:
   uajp:
     build: .
     tty: true
+    depends_on:
+      - mysql_db
+  
+  mysql_db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    #volumes:  
+    ports:
+    - "3306:3306"
+
