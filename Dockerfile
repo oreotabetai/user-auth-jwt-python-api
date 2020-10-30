@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install -r requirements.txt
+RUN apk add --no-cache --update gcc musl-dev python3-dev libffi-dev openssl-dev
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "server.py"]
