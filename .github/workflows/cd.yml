@@ -17,5 +17,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: oreotabetai/user-auth-jwt-python-api
+          repository: oreotabetai/user-auth-jwt-python-api/user-auth-jwt-python-api
           tag_with_ref: true
