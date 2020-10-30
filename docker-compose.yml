@@ -1,16 +1,16 @@
 version: '3'
 services:
-  uajp:
+  app:
     build: .
     tty: true
     depends_on:
-      - mysql_db
-  
-  mysql_db:
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    #volumes:  
+      - mysql
     ports:
-    - "3306:3306"
+    - "3000:3000"
+  mysql:
+    image: mysql
+    volume:
+      mysql-vol:
 
+volumes:
+  mysql-vol:
