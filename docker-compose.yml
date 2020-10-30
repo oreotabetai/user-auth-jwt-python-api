@@ -9,8 +9,8 @@ services:
     - "3000:3000"
   mysql:
     image: mysql
-    volume:
-      mysql-vol:
+    volumes: 
+      - mysql-vol
 
 volumes:
   mysql-vol:
