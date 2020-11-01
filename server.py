@@ -1,4 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from auth import authenticate
+from user import fetch_user_info, create_user
 
 app = FastAPI()
 
@@ -7,13 +10,13 @@ def read_root():
     return {"Hello": "World"}
 
 @app.post("/login")
-def login_user():
-    return {"return jwt if authorize"}
+async def login(form: OAuth2PasswordRequestForm = Depends()):
+  return authenticate(form.username, form.password)
 
 @app.post("/register")
-def register_user():
-    return {"register user"}
+async def register_user():
+  return create_user()
 
 @app.get("/users/{user_id}")
-def get_info(user_id: int):
-    return {"return user " + str(user_id) + "information"}
+async def get_info(user_id: str):
+  return fetch_user_info(user_id)
