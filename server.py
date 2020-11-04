@@ -1,7 +1,11 @@
 from fastapi import FastAPI, Depends
-from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from auth import authenticate
 from user import fetch_user_info, create_user
+
+class User(BaseModel):
+  name: str
+  password: str
 
 app = FastAPI()
 
@@ -10,8 +14,8 @@ def read_root():
     return {"Hello": "World"}
 
 @app.post("/login")
-async def login(form: OAuth2PasswordRequestForm = Depends()):
-  return authenticate(form.username, form.password)
+async def login(user: User):
+  return authenticate(user.name, user.password)
 
 @app.post("/register")
 async def register_user():
