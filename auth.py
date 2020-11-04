@@ -13,20 +13,24 @@ fake_users_db = {
       "disabled": False,
   }
 }
+
 # for instance 
-secret_key = '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7'
+exptime = 2
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
+with open(".key/private-key.pem", "rb") as key_file:
+    private_key = key_file.read()
+    
 def create_tokens(user_id: str):
   payload = {
     'token_type': 'access_token',
-    'exp': datetime.utcnow() + timedelta(minutes=2),
+    'exp': datetime.utcnow() + timedelta(minutes=exptime),
     'sub': user_id,
     'iss': 'change it using env later'
   }
 
-  return jwt.encode(payload, secret_key, algorithm='HS256')
+  return jwt.encode(payload, private_key, algorithm='RS256')
 
 def authenticate(username: str, password: str):
   user = fake_users_db.get(username)
