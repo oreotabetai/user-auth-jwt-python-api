@@ -3,13 +3,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
 
+DB_USER = os.getenv("DB_USER", "root")
 DB_NAME = os.getenv("DB_NAME", "user-auth")
+DB_HOST = os.getenv("DB_HOST", "mysql")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "root")
 
 DATABASE = 'mysql://%s:%s@%s/%s?charset=utf8' % (
-  user_name,
+  DB_USER,
   DB_PASSWORD,
-  host,
+  DB_HOST,
   DB_NAME
 )
 
