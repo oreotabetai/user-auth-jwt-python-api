@@ -6,7 +6,7 @@ import bcrypt
 
 from user import fetch_user_info, search_user
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 exp_duration = os.getenv("JWT_EXP_SECONDS", 120)
 private_key_path = os.getenv("PRIVATE_KEY_PATH", "./key/private-key.pem")
