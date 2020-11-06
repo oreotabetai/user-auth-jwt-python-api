@@ -1,10 +1,8 @@
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import HTTPException, Depends
 from datetime import datetime, timedelta
-import os, jwt, sys
-import bcrypt
-
-from user import fetch_user_info, search_user
+from .user import fetch_user_info, search_user
+import os, jwt, sys, bcrypt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -33,12 +31,11 @@ def authenticate(username: str, password: str):
   user = search_user(username)
   if not user:
     raise HTTPException(status_code=401, detail="Incorrect username or password")
-  
-  if not bcrypt.checkpw(password, user["password"]):
+  if not bcrypt.checkpw(password.encode(), user.password_hash.encode()):
     raise HTTPException(status_code=401, detail="Incorrect username or password")
   
   return {
-    "access_token": create_tokens(user["id"]),
+    "access_token": create_tokens(user.id),
     "token_type": "bearer"
   }
 
