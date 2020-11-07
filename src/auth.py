@@ -1,10 +1,7 @@
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from datetime import datetime, timedelta
 from .user import fetch_user_info, search_user
-import os, jwt, sys, bcrypt
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+import os, jwt, bcrypt
 
 exp_duration = os.getenv("JWT_EXP_SECONDS", 120)
 private_key_path = os.getenv("PRIVATE_KEY_PATH", "./key/private-key.pem")
@@ -39,14 +36,18 @@ def authenticate(username: str, password: str):
     "token_type": "bearer"
   }
 
-def get_current_user_from_token(token: str, token_type: str):
-  payload = jwt.decode(token, public_key, algorithms='RS256')
+def get_current_user_from_token(token: str):
+  try:
+    payload = jwt.decode(token, public_key, algorithms='RS256')
+  except:
+    raise HTTPException(status_code=401, detail="Invalid token")
 
-  if payload['token_type'] != token_type:
+  if payload['token_type'] != 'access_token':
     raise HTTPException(status_code=401, detail="Invalid Token Type")
-  user = fetch_user_info(payload['sub'])
-  
-  return user
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-  return get_current_user_from_token(token, 'access_token')
+  user = fetch_user_info(payload['sub'])
+  return {
+    'id': user.id,
+    'name': user.name,
+    'email': user.email,
+  }
