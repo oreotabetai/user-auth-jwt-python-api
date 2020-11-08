@@ -3,3 +3,4 @@ PyJWT~=1.7
 uvicorn~=0.12
 pydantic~=1.7
 cryptography~=3.2
+bcrypt~=3.2
