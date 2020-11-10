@@ -1,1 +1,1 @@
-CREATE TABLE users (id VARCHAR(64), name VARCHAR(128), password_hash TEXT, email VARCHAR(256));
+CREATE TABLE users (id VARCHAR(64) NOT NULL PRIMARY KEY, name VARCHAR(128), password_hash TEXT NOT NULL, email VARCHAR(256));
