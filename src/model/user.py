@@ -16,6 +16,16 @@ class User(BaseModel):
   password_hash: str
   email: str
 
+class LoginUser(BaseModel):
+  userID: str
+  password: str
+
+class CreateUser(BaseModel):
+  userID: str
+  name: str
+  password: str
+  email: str
+
 
 def main():
   Base.metadata.create_all(bind=engine)
