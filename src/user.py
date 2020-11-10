@@ -9,7 +9,7 @@ def fetch_user_info(user_id: str) -> UserTable:
 def search_user(user_id: str) -> UserTable:
   return session.query(UserTable).filter(UserTable.id == user_id).first()
 
-def create_user(user_id: str, name: str, pass_hash: str, email: str) -> str:
+def create_user(user_id: str, name: str, pass_hash: str, email: str):
   user = UserTable()
   if search_user(user_id):
     raise HTTPException(status_code=409, detail="UserID is already registered")
@@ -19,4 +19,3 @@ def create_user(user_id: str, name: str, pass_hash: str, email: str) -> str:
   user.email = email
   session.add(user)
   session.commit()
-  return {"successed registering user!"}

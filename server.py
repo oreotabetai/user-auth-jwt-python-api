@@ -18,7 +18,7 @@ async def login(user: LoginUser) -> authType:
 
 @app.post("/register")
 async def register_user(creUser: CreateUser) -> str:
-  return user.create_user(
+  user.create_user(
     auth.check_res_data(creUser.id),
     auth.check_res_data(creUser.name), 
     auth.hash_password(creUser.password), 
