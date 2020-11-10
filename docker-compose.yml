@@ -5,6 +5,8 @@ services:
     tty: true
     depends_on:
       - mysql
+    volumes:
+      - ./:/app
     ports:
       - "3000:3000"
   mysql:
