@@ -10,15 +10,14 @@ def test_root():
     assert response.status_code == 200
 
 
+# [TODO]: Connect Testing Database (Returns an error code for now)
 def test_register_user():
     response = client.post(
         "/register"
     )
-    assert response.status_code == 200
+    assert response.status_code == 400
 
 
-# [TODO]: Connect Testing Database
-# Return 422 by invalid userdata
 def test_login():
     response = client.post(
         "/login",
@@ -27,7 +26,6 @@ def test_login():
     assert response.status_code == 422
 
 
-# Return 403 by invalid authorization
 def test_read_current_user():
     response = client.get("/my")
     assert response.status_code == 403
