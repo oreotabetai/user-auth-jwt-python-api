@@ -8,7 +8,7 @@ This server is mainly build with python(fastapi), mysql in database.
 ### For All
 - `OpenSSL`
 
-### Run Local (for Ubuntu)
+### Run Local (for Ubuntu, TBD)
 
 - TBD
 
@@ -67,7 +67,7 @@ docker.pkg.github.com
     - default "user-auth"
 
 ## Installation
-### Build from Source (for Ubuntu)
+### Build from Source (for Ubuntu, TBD)
 
 - Install pipenv
 - Install Pipfile contents by pipenv
