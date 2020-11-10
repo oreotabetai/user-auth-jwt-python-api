@@ -5,6 +5,8 @@ services:
     tty: true
     depends_on:
       - mysql
+    volumes:
+      - ./:/app
     ports:
       - "3000:3000"
   mysql:
@@ -14,6 +16,7 @@ services:
       MYSQL_DATABASE: user-auth
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d # For database initializing
 
 volumes:
   mysql-data:

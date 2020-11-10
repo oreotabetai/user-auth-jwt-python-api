@@ -1,13 +1,15 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
-from auth import authenticate
-from user import fetch_user_info, create_user
+from src import auth, user
+from src.model.user import UserTable
 
 class User(BaseModel):
   name: str
   password: str
 
 app = FastAPI()
+security = HTTPBearer()
 
 @app.get("/")
 def read_root():
@@ -15,12 +17,12 @@ def read_root():
 
 @app.post("/login")
 async def login(user: User):
-  return authenticate(user.name, user.password)
+  return auth.authenticate(user.name, user.password)
 
 @app.post("/register")
 async def register_user():
-  return create_user()
+  return user.create_user()
 
-@app.get("/users/{user_id}")
-async def get_info(user_id: str):
-  return fetch_user_info(user_id)
+@app.get("/my")
+async def read_current_user(cred: HTTPAuthorizationCredentials = Security(security)):  
+  return auth.get_current_user_from_token(cred.credentials)

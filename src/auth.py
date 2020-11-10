@@ -1,27 +1,18 @@
-from fastapi.security import OAuth2PasswordBearer
 from fastapi import HTTPException
 from datetime import datetime, timedelta
-import os 
-import jwt
-
-fake_users_db = {
-  "yamakenji": {
-      "id": "base64id",
-      "username": "yamakenji",
-      "full_name": "Kenji Yamashita",
-      "email": "sample@example.com",
-      "password": "fakehashedsecret",
-      "disabled": False,
-  }
-}
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
+from .user import fetch_user_info, search_user
+import os, jwt, bcrypt
 
 exp_duration = os.getenv("JWT_EXP_SECONDS", 120)
 private_key_path = os.getenv("PRIVATE_KEY_PATH", "./key/private-key.pem")
+public_key_path = os.getenv("PUBLIC_KEY_PATH", "./key/public-key.pem")
 
 with open(private_key_path, "rb") as key_file:
     private_key = key_file.read()
+
+with open(public_key_path, "rb") as key_file:
+    public_key = key_file.read()
+
     
 def create_tokens(user_id: str):
   payload = {
@@ -34,14 +25,29 @@ def create_tokens(user_id: str):
   return jwt.encode(payload, private_key, algorithm='RS256')
 
 def authenticate(username: str, password: str):
-  user = fake_users_db.get(username)
+  user = search_user(username)
   if not user:
     raise HTTPException(status_code=401, detail="Incorrect username or password")
-
-  if user["password"] != password:
+  if not bcrypt.checkpw(password.encode(), user.password_hash.encode()):
     raise HTTPException(status_code=401, detail="Incorrect username or password")
   
   return {
-    "access_token": create_tokens(user["id"]),
+    "access_token": create_tokens(user.id),
     "token_type": "bearer"
+  }
+
+def get_current_user_from_token(token: str):
+  try:
+    payload = jwt.decode(token, public_key, algorithms='RS256')
+  except:
+    raise HTTPException(status_code=401, detail="Invalid token")
+
+  if payload['token_type'] != 'access_token':
+    raise HTTPException(status_code=401, detail="Invalid Token Type")
+
+  user = fetch_user_info(payload['sub'])
+  return {
+    'id': user.id,
+    'name': user.name,
+    'email': user.email,
   }
