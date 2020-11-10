@@ -2,6 +2,12 @@ from sqlalchemy import Column, String
 from pydantic import BaseModel
 from ..db import Base, engine
 
+userInfo = {
+  "id": str,
+  "name": str,
+  "email": str,
+}
+
 # userテーブルのモデル
 class UserTable(Base):
   __tablename__ = "users"
@@ -16,6 +22,15 @@ class User(BaseModel):
   password_hash: str
   email: str
 
+class LoginUser(BaseModel):
+  id: str
+  password: str
+
+class CreateUser(BaseModel):
+  id: str
+  name: str
+  password: str
+  email: str
 
 def main():
   Base.metadata.create_all(bind=engine)
