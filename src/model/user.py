@@ -1,6 +1,13 @@
 from sqlalchemy import Column, String
 from pydantic import BaseModel
 from ..db import Base, engine
+from typing import Dict
+
+userType = Dict[
+  "id": str,
+  "name": str,
+  "email": str,
+]
 
 # userテーブルのモデル
 class UserTable(Base):
@@ -17,15 +24,14 @@ class User(BaseModel):
   email: str
 
 class LoginUser(BaseModel):
-  userID: str
+  id: str
   password: str
 
 class CreateUser(BaseModel):
-  userID: str
+  id: str
   name: str
   password: str
   email: str
-
 
 def main():
   Base.metadata.create_all(bind=engine)

@@ -1,6 +1,8 @@
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 from .user import fetch_user_info, search_user
+from .model.auth import authType
+from .model.user import userType
 import os, jwt, bcrypt
 
 exp_duration = os.getenv("JWT_EXP_SECONDS", 120)
@@ -14,7 +16,7 @@ with open(public_key_path, "rb") as key_file:
     public_key = key_file.read()
 
     
-def create_tokens(user_id: str):
+def create_tokens(user_id: str) -> str:
   payload = {
     'token_type': 'access_token',
     'exp': datetime.utcnow() + timedelta(seconds=exp_duration),
@@ -24,8 +26,8 @@ def create_tokens(user_id: str):
 
   return jwt.encode(payload, private_key, algorithm='RS256')
 
-def authenticate(userID: str, password: str):
-  user = search_user(userID)
+def authenticate(user_id: str, password: str) -> authType:
+  user = search_user(user_id)
   if not user:
     raise HTTPException(status_code=401, detail="Incorrect username or password")
   if not bcrypt.checkpw(password.encode(), user.password_hash.encode()):
@@ -36,7 +38,7 @@ def authenticate(userID: str, password: str):
     "token_type": "bearer"
   }
 
-def get_current_user_from_token(token: str):
+def get_current_user_from_token(token: str) -> userType:
   try:
     payload = jwt.decode(token, public_key, algorithms='RS256')
   except:
@@ -52,11 +54,11 @@ def get_current_user_from_token(token: str):
     'email': user.email,
   }
 
-def hash_password(password: str):
+def hash_password(password: str) -> str:
   chkpass = check_res_data(password)
   return bcrypt.hashpw(chkpass.encode(), bcrypt.gensalt())
 
-def check_res_data(res_data: str):
+def check_res_data(res_data: str) -> str:
   if len(res_data) <= 0:
     raise HTTPException(status_code=400, detail="Wrong format for creating user")
   return res_data
