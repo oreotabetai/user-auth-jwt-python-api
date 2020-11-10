@@ -23,6 +23,6 @@ async def login(user: User):
 async def register_user():
   return user.create_user()
 
-@app.get("/users/me")
+@app.get("/my")
 async def read_current_user(cred: HTTPAuthorizationCredentials = Security(security)):  
   return auth.get_current_user_from_token(cred.credentials)
