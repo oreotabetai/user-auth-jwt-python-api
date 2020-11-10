@@ -24,8 +24,8 @@ def create_tokens(user_id: str):
 
   return jwt.encode(payload, private_key, algorithm='RS256')
 
-def authenticate(username: str, password: str):
-  user = search_user(username)
+def authenticate(userID: str, password: str):
+  user = search_user(userID)
   if not user:
     raise HTTPException(status_code=401, detail="Incorrect username or password")
   if not bcrypt.checkpw(password.encode(), user.password_hash.encode()):
@@ -51,3 +51,12 @@ def get_current_user_from_token(token: str):
     'name': user.name,
     'email': user.email,
   }
+
+def hash_password(password: str):
+  chkpass = check_res_data(password)
+  return bcrypt.hashpw(chkpass.encode(), bcrypt.gensalt())
+
+def check_res_data(res_data: str):
+  if len(res_data) <= 0:
+    raise HTTPException(status_code=400, detail="Wrong format for creating user")
+  return res_data
