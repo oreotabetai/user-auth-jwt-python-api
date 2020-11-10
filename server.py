@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 from src import auth, user
-from src.model.user import UserTable, LoginUser, CreateUser, userType
+from src.model.user import UserTable, LoginUser, CreateUser, userInfo
 from src.model.auth import authType
 
 app = FastAPI()
@@ -26,5 +26,5 @@ async def register_user(creUser: CreateUser) -> str:
   )
 
 @app.get("/my")
-async def read_current_user(cred: HTTPAuthorizationCredentials = Security(security)) -> userType:  
+async def read_current_user(cred: HTTPAuthorizationCredentials = Security(security)) -> userInfo:  
   return auth.get_current_user_from_token(cred.credentials)

@@ -1,13 +1,12 @@
 from sqlalchemy import Column, String
 from pydantic import BaseModel
 from ..db import Base, engine
-from typing import Dict
 
-userType = Dict[
+userInfo = {
   "id": str,
   "name": str,
   "email": str,
-]
+}
 
 # userテーブルのモデル
 class UserTable(Base):

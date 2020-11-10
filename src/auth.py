@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from datetime import datetime, timedelta
 from .user import fetch_user_info, search_user
 from .model.auth import authType
-from .model.user import userType
+from .model.user import userInfo
 import os, jwt, bcrypt
 
 exp_duration = os.getenv("JWT_EXP_SECONDS", 120)
@@ -38,7 +38,7 @@ def authenticate(user_id: str, password: str) -> authType:
     "token_type": "bearer"
   }
 
-def get_current_user_from_token(token: str) -> userType:
+def get_current_user_from_token(token: str) -> userInfo:
   try:
     payload = jwt.decode(token, public_key, algorithms='RS256')
   except:
