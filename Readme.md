@@ -84,7 +84,7 @@ $ pipenv --python 3.8
 Install library which is required by running the command described below.
 
 ```
-$ pipenv install -r requirements.txt
+$ pipenv install
 ```
 
 ### Build Docker Image from Source
